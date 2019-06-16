@@ -15,7 +15,7 @@
 using namespace Sockets;
 
 TcpSocket::TcpSocket(int family, int flags)
-    : addr_info_ptr_{new addrinfo}
+    : addr_info_ptr_{new addrinfo, &freeaddrinfo}
 {
     memset(addr_info_ptr_.get(), 0, sizeof(*addr_info_ptr_));
     
@@ -108,12 +108,6 @@ long TcpSocket::receive(char* msg, int len, int flags)
     }
     
     return received_len;
-}
-
-
-void TcpSocket::FreeAddrInfo::operator()(addrinfo* addr_info) const
-{
-    freeaddrinfo(addr_info);
 }
 
 void TcpSocket::CloseSocketDescriptor::operator()(SocketDescriptor* socket_desc_) const

@@ -37,11 +37,6 @@ namespace Sockets
         long receive(char* msg, int len, int flags);
         
     private:
-        struct FreeAddrInfo
-        {
-            void operator()(addrinfo* addr_info_) const;
-        };
-        
         struct CloseSocketDescriptor
         {
             void operator()(SocketDescriptor* socket_desc_) const;
@@ -50,7 +45,7 @@ namespace Sockets
         struct sockaddr_in sockaddr_in_;
         
         std::unique_ptr<SocketDescriptor, CloseSocketDescriptor> socket_desc_ptr_;
-        std::unique_ptr<addrinfo, FreeAddrInfo> addr_info_ptr_;
+        std::unique_ptr<addrinfo, decltype(&freeaddrinfo)> addr_info_ptr_;
     };
 }
 #endif /* TCPSocket_hpp */
